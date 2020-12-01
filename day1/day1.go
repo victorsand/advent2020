@@ -10,7 +10,7 @@ func part1() int {
 	var inputLines = util.ReadFile("day1/input.txt")
 	var i, j int
 	for i=0; i<len(inputLines); i++ {
-		for j=i; j<len(inputLines); j++ {
+		for j=i+1; j<len(inputLines); j++ {
 			x, err := strconv.ParseInt(inputLines[i], 0, 32)
 			if (err != nil) {
 				fmt.Println("", err)
@@ -38,7 +38,7 @@ func part2() int {
 	var sumsOfTwo []sumOfTwo
 	var i, j int
 	for i=0; i<len(inputLines); i++ {
-		for j=i; j<len(inputLines); j++ {
+		for j=i+1; j<len(inputLines); j++ {
 			var x, y int64
 			var err error
 			x, err = strconv.ParseInt(inputLines[i], 0, 32)
