@@ -27,37 +27,33 @@ func part1() int {
 	return 0
 }
 
-type sumOfTwo struct {
-	a int
-	b int
-	sum int
-}
-
 func part2() int {
 	var inputLines = util.ReadFile("day1/input.txt")
-	var sumsOfTwo []sumOfTwo
-	var i, j int
+	var i, j, k int
+
+	// just brute force it, as a star
 	for i=0; i<len(inputLines); i++ {
 		for j=i+1; j<len(inputLines); j++ {
-			var x, y int64
-			var err error
-			x, err = strconv.ParseInt(inputLines[i], 0, 32)
-			y, err = strconv.ParseInt(inputLines[j], 0, 32)
-			if (err != nil) {
-				fmt.Println("", err)
+			for k=j+1; k<len(inputLines); k++ {
+				var x, y, z int64
+				var err error
+				x, err = strconv.ParseInt(inputLines[i], 0, 32)
+				if (err != nil) {
+					fmt.Println("", err)
+				}
+				y, err = strconv.ParseInt(inputLines[j], 0, 32)
+				if (err != nil) {
+					fmt.Println("", err)
+				}
+				z, err = strconv.ParseInt(inputLines[k], 0, 32)
+				if (err != nil) {
+					fmt.Println("", err)
+				}
+				if (x + y + z == 2020) {
+					return int(x * y * z)
+				}
 			}
-			sumsOfTwo = append(sumsOfTwo, sumOfTwo{int(x), int(y), int(x + y)})
-		}
-	}
-	for i=0; i<len(sumsOfTwo); i++ {
-		for j=0; j<len(inputLines); j++ {
-			x, err := strconv.ParseInt(inputLines[j], 0, 32)
-			if (err != nil) {
-				fmt.Println("", err)
-			}
-			if (sumsOfTwo[i].sum + int(x) == 2020) {
-				return sumsOfTwo[i].a * sumsOfTwo[i].b * int(x)
-			}
+
 		}
 	}
 	return 0
