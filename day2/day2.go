@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"advent2020/util"
-	"strconv"
+	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -23,7 +23,7 @@ func part1() int {
 		password := strings.Split(line, ": ")[1]
 
 		freq := int64(strings.Count(password, character))
-	
+
 		if freq >= minFreq && freq <= maxFreq {
 			numValid++
 		}
@@ -42,14 +42,14 @@ func part2() int {
 
 		characterRe := regexp.MustCompile("[a-z]")
 		character := characterRe.FindString(line)
-		
+
 		password := strings.Split(line, ": ")[1]
-	
+
 		numMatches := 0
-		if (string(password[pos1-1]) == character) {
+		if string(password[pos1-1]) == character {
 			numMatches++
 		}
-		if (string(password[pos2-1]) == character) {
+		if string(password[pos2-1]) == character {
 			numMatches++
 		}
 
@@ -62,7 +62,7 @@ func part2() int {
 
 // 586
 // 352
-func main() {  
+func main() {
 	fmt.Println(part1())
 	fmt.Println(part2())
 }
