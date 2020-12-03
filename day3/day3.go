@@ -5,19 +5,17 @@ import (
 	"fmt"
 )
 
-func countSlopeTrees(g []string, xStep int, yStep int) int {
+func countSlopeTrees(grid []string, xStep int, yStep int) int {
 	numTrees := 0
 	xPos, yPos := 0, 0
-	numRows := len(g)
+	numRows := len(grid)
 	for {
-		currentRow := g[yPos]
-		rowWidth := len(currentRow)
-		xPos = (xPos + xStep) % rowWidth
+		xPos = (xPos + xStep) % len(grid[yPos])
 		yPos = yPos + yStep
 		if yPos >= numRows {
 			break
 		}
-		if g[yPos][xPos] == '#' {
+		if grid[yPos][xPos] == '#' {
 			numTrees++
 		}
 	}
