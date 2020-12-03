@@ -10,21 +10,10 @@ type grid struct {
 }
 
 func buildGrid(inputLines []string) grid {
-	gridSizeX := 0
-	gridSizeY := 0
 	var areaGrid grid
 	for _, line := range inputLines {
-		var areaRow string
-		for pos, char := range line {
-			areaRow += string(char)
-			if pos+1 > gridSizeX {
-				gridSizeX = pos + 1
-			}
-		}
-		areaGrid.Rows = append(areaGrid.Rows, areaRow)
-		gridSizeY++
+		areaGrid.Rows = append(areaGrid.Rows, line)
 	}
-	fmt.Printf("Grid size: %d x %d\n", gridSizeX, gridSizeY)
 	return areaGrid
 }
 
