@@ -3,7 +3,6 @@ package main
 import (
 	"advent2020/util"
 	"fmt"
-	"math"
 )
 
 func test() {
@@ -12,13 +11,13 @@ func test() {
 }
 
 func lowerHalf(lower, upper, diff int) (int, int, int) {
-	upper = upper - int(math.Ceil(float64(diff)/2.0))
+	upper = upper - (diff+1)/2
 	diff = upper - lower
 	return lower, upper, diff
 }
 
 func upperHalf(lower, upper, diff int) (int, int, int) {
-	lower = lower + int(math.Ceil(float64(diff)/2.0))
+	lower = lower + (diff+1)/2
 	diff = upper - lower
 	return lower, upper, diff
 }
@@ -49,6 +48,10 @@ func calculateColumn(input string) int {
 	return lower
 }
 
+func calculateID(row, column int) int {
+	return row*8 + column
+}
+
 func main() {
 	//test()
 	var inputLines = util.ReadFile("day5/input.txt")
@@ -56,10 +59,11 @@ func main() {
 	maxID := 0
 	var IDs map[int]bool
 	IDs = make(map[int]bool)
+
 	for _, line := range inputLines {
 		row := calculateRow(line)
 		column := calculateColumn(line)
-		id := row*8 + column
+		id := calculateID(row, column)
 		IDs[id] = true
 		if id > maxID {
 			maxID = id
