@@ -60,7 +60,7 @@ func main() {
 
 	// build the adjacency list forwards, for traversing from the outermost bag and inwards, recursively
 	adjListForward := buildAdjacencyList(inputLines, directionForward)
-	fmt.Println("Part 2", countBags("shinygold", adjListForward)-1) // remove the start bag itself
+	fmt.Println("Part 2", countBags("shinygold", adjListForward)-1) // remove the start bag itself from count
 }
 
 func countBags(node string, list map[string][]edge) int {
@@ -102,12 +102,10 @@ func edgeSliceToTargetStringSlice(source []edge) []string {
 }
 
 func containsString(target []string, item string) bool {
-	existsInQueue := false
 	for _, itemInTarget := range target {
 		if itemInTarget == item {
-			existsInQueue = true
-			break
+			return true
 		}
 	}
-	return existsInQueue
+	return false
 }
