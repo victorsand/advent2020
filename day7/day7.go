@@ -8,43 +8,60 @@ import (
 )
 
 type edge struct {
-	weight int64
+	weight int
 	target string
 }
 
-func buildAdjListBackwards(inputLines []string) map[string][]edge {
+const directionForward = 0
+const directionBackward = 1
+
+func buildAdjacencyList(inputLines []string, direction int) map[string][]edge {
 	result := make(map[string][]edge)
 	for _, line := range inputLines {
-		if strings.Contains(line, "no other bags") {
-			continue
-		}
 		split := strings.Split(line, " ")
 		rootColor := split[0] + split[1]
+		if strings.Contains(line, "no other bags") {
+			if direction == directionForward {
+				result[rootColor] = []edge{}
+			}
+			continue
+		}
 		bagsDef := strings.Join(split[4:len(split)-1], " ")
 		bagsDefStrings := strings.Split(bagsDef, ",")
 		for _, bag := range bagsDefStrings {
 			bagDefSplit := strings.Split(strings.Trim(bag, " "), " ")
 			number, _ := strconv.ParseInt(bagDefSplit[0], 10, 64)
 			color := bagDefSplit[1] + bagDefSplit[2]
-			bagEdge := edge{weight: number, target: rootColor}
-			if result[color] != nil {
-				result[color] = append(result[color], bagEdge)
+			var from, to string
+			if direction == directionForward {
+				from = rootColor
+				to = color
+			} else if direction == directionBackward {
+				from = color
+				to = rootColor
+			}
+			bagEdge := edge{weight: int(number), target: to}
+			if result[from] != nil {
+				result[from] = append(result[from], bagEdge)
 			} else {
-				result[color] = []edge{bagEdge}
+				result[from] = []edge{bagEdge}
 			}
 		}
-
 	}
 	return result
 }
 
 func main() {
-	var inputLines = util.ReadFile("day7/input.txt")
+	var inputLines = util.ReadFile("day7/testinput.txt")
 
 	// build the adjacency list backwards, for traversing from the innermost bag and outwards
-	adjListBackwards := buildAdjListBackwards(inputLines)
+	adjListBackwards := buildAdjacencyList(inputLines, directionBackward)
 	fmt.Println("Part 1", countAdjacentNodes(adjListBackwards, "shinygold"))
 
+	// build the adjacency list forwards, for traversing from the outermost bag and inwards
+	adjListForward := buildAdjacencyList(inputLines, directionForward)
+	fmt.Println("Part 2", adjListForward)
+	//fmt.Println("Part 2", multiplyAdjacentNodeWeights(adjListForward, "shinygold"))
 }
 
 func countAdjacentNodes(list map[string][]edge, startNode string) int {
@@ -67,6 +84,8 @@ func countAdjacentNodes(list map[string][]edge, startNode string) int {
 	}
 	return count
 }
+
+// gotta do depth first
 
 func edgeSliceToTargetStringSlice(source []edge) []string {
 	var result []string
