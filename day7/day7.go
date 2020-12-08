@@ -52,16 +52,24 @@ func buildAdjacencyList(inputLines []string, direction int) map[string][]edge {
 }
 
 func main() {
-	var inputLines = util.ReadFile("day7/testinput.txt")
+	var inputLines = util.ReadFile("day7/input.txt")
 
 	// build the adjacency list backwards, for traversing from the innermost bag and outwards
 	adjListBackwards := buildAdjacencyList(inputLines, directionBackward)
 	fmt.Println("Part 1", countAdjacentNodes(adjListBackwards, "shinygold"))
 
-	// build the adjacency list forwards, for traversing from the outermost bag and inwards
+	// build the adjacency list forwards, for traversing from the outermost bag and inwards, recursively
 	adjListForward := buildAdjacencyList(inputLines, directionForward)
-	fmt.Println("Part 2", adjListForward)
-	//fmt.Println("Part 2", multiplyAdjacentNodeWeights(adjListForward, "shinygold"))
+	fmt.Println("Part 2", countBags("shinygold", adjListForward)-1) // remove the start bag itself
+}
+
+func countBags(node string, list map[string][]edge) int {
+	sum := 1
+	var children = list[node]
+	for _, child := range children {
+		sum += child.weight * countBags(child.target, list)
+	}
+	return sum
 }
 
 func countAdjacentNodes(list map[string][]edge, startNode string) int {
@@ -84,8 +92,6 @@ func countAdjacentNodes(list map[string][]edge, startNode string) int {
 	}
 	return count
 }
-
-// gotta do depth first
 
 func edgeSliceToTargetStringSlice(source []edge) []string {
 	var result []string
