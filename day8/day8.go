@@ -42,55 +42,15 @@ func switchOperation(instructions []instruction, index int) {
 	}
 }
 
-func switchAndRun(instructions []instruction) {
-	operationToSwitch := 0
-	isBroken := true
-	for operationToSwitch < len(instructions) && isBroken {
-		resetRunFlags(instructions)
-		switchOperation(instructions, operationToSwitch)
-		accumulator := int64(0)
-		next := 0
-		for next < len(instructions) {
-			current := next
-			instruction := instructions[next]
-			if instruction.hasRun {
-				isBroken = true
-				break
-			}
-			switch instruction.operation {
-			case accumulate:
-				accumulator += instruction.value
-				next++
-			case jump:
-				next += int(instruction.value)
-			case noOperation:
-				next++
-			default:
-				panic("Unknown operation" + instruction.operation)
-
-			}
-			instructions[current].hasRun = true
-		}
-		if next >= len(instructions) {
-			fmt.Println("FIXED! Accumulator value:", accumulator)
-			break
-		}
-		switchOperation(instructions, operationToSwitch)
-		operationToSwitch++
-	}
-}
-
-func main() {
-	inputLines := util.ReadFile("day8/input.txt")
-	instructions := parseInstructions(inputLines)
-
+func runAccumulator(instructions []instruction) (int, bool) {
+	loopDetected := false
 	accumulator := int64(0)
 	next := 0
 	for next < len(instructions) {
 		current := next
 		instruction := instructions[next]
 		if instruction.hasRun {
-			fmt.Println("Loop detected!")
+			loopDetected = true
 			break
 		}
 		switch instruction.operation {
@@ -107,8 +67,30 @@ func main() {
 		}
 		instructions[current].hasRun = true
 	}
-	fmt.Println("Accumulator value:", accumulator)
+	return int(accumulator), loopDetected
+}
 
+func switchAndRun(instructions []instruction) {
+	operationToSwitch := 0
+	isBroken := true
+	for operationToSwitch < len(instructions) && isBroken {
+		resetRunFlags(instructions)
+		switchOperation(instructions, operationToSwitch)
+		value, loopDetected := runAccumulator(instructions)
+		if !loopDetected {
+			fmt.Println("FIXED! Accumulator value:", value)
+			break
+		}
+		switchOperation(instructions, operationToSwitch)
+		operationToSwitch++
+	}
+}
+
+func main() {
+	inputLines := util.ReadFile("day8/input.txt")
+	instructions := parseInstructions(inputLines)
+	value, _ := runAccumulator(instructions)
+	fmt.Println("Accumulator value:", value)
 	switchAndRun(instructions)
 
 }
